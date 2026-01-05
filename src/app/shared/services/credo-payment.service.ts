@@ -86,7 +86,9 @@ export class CredoPaymentService {
       metadata,
       callbackUrl,
 
-      onClose: () => {},
+      onClose: () => {
+        window.location.reload();
+      },
 
       callBack: (response: any) => {
         const result = this.parsePaymentResult(response.callbackUrl);
