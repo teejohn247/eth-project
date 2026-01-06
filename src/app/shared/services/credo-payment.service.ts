@@ -36,8 +36,8 @@ export class CredoPaymentService {
       ? this.utilityService.registrationData.registrationNumber 
       : 'ETH202500003';
 
-    const rand1 = this.generateRandom(10, 60);
-    const rand2 = this.generateRandom(10, 90);
+    const rand1 = this.generateRandom(10, 800);
+    const rand2 = this.generateRandom(10, 900);
 
     return `${regNo}${rand1}hvc${rand2}`;
   }
@@ -86,9 +86,7 @@ export class CredoPaymentService {
       metadata,
       callbackUrl,
 
-      onClose: () => {
-        window.location.reload();
-      },
+      onClose: () => {},
 
       callBack: (response: any) => {
         const result = this.parsePaymentResult(response.callbackUrl);
