@@ -57,6 +57,10 @@
             <div class="contestants-wrap mt-lg-5 mt-4">
                 <div *ngFor="let c of (filteredContestants$ | async)" class="contestant-hld">
 
+                    <div *ngIf="c.isEvicted" class="evicted-cover">
+                        <img src="assets/img/project/evicted-img.png" alt="">
+                    </div>
+
                     <!-- Image Card -->
                     <div class="img-card" [ngStyle]="{'background-image': getBackgroundImage(c)}">
                         <!-- <div class="gradient-overlay"></div> -->

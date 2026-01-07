@@ -19,6 +19,29 @@ export class VotingComponent implements OnInit {
   private searchTerm$ = new BehaviorSubject<string>('');
   private refresh$ = new Subject<void>();
   searchLoading = false;
+  evictedContestants = [
+    "CNT-003",
+    "CNT-004",
+    "CNT-005",
+    "CNT-006",
+    "CNT-007",
+    "CNT-011",
+    "CNT-013",
+    "CNT-016",
+    "CNT-017",
+    "CNT-021",
+    "CNT-022",
+    "CNT-023",
+    "CNT-024",
+    "CNT-025",
+    "CNT-027",
+    "CNT-028",
+    "CNT-038",
+    "CNT-039",
+    "CNT-040",
+    "CNT-041",
+    "CNT-044"
+  ]
 
   // the filtered list driven by backend
   filteredContestants$: Observable<any[]> = of([]);
@@ -50,19 +73,54 @@ export class VotingComponent implements OnInit {
     this.listenForVoteCompletion();
 
     // wire up search -> backend stream
+    // this.filteredContestants$ = merge(
+    //   this.searchTerm$,
+    //   this.refresh$.pipe(map(() => this.searchTerm)) // use current search value
+    // ).pipe(
+    //   debounceTime(300),
+    //   tap(() => this.searchLoading = true),
+    //   switchMap(search =>
+    //     this.sharedService.getAllContestants(search).pipe(
+    //       map(res => {
+    //         // adapt to your backend shape (res.data or res.data.contestants)
+    //         // prefer res.data.contestants if available, fall back to res.data
+    //         const data = res?.data?.contestants ?? res?.data ?? [];
+    //         return data;
+    //       }),
+    //       catchError(err => {
+    //         this.notifyService.showError('Could not load contestants. Please try again.');
+    //         return of([]);
+    //       })
+    //     )
+    //   ),
+    //   tap(() => this.searchLoading = false)
+    // );
+
+    // wire up search -> backend stream
     this.filteredContestants$ = merge(
       this.searchTerm$,
-      this.refresh$.pipe(map(() => this.searchTerm)) // use current search value
+      this.refresh$.pipe(map(() => this.searchTerm))
     ).pipe(
       debounceTime(300),
-      tap(() => this.searchLoading = true),
+      tap(() => (this.searchLoading = true)),
       switchMap(search =>
         this.sharedService.getAllContestants(search).pipe(
           map(res => {
-            // adapt to your backend shape (res.data or res.data.contestants)
-            // prefer res.data.contestants if available, fall back to res.data
             const data = res?.data?.contestants ?? res?.data ?? [];
-            return data;
+
+            // Fast lookup for evicted contestants
+            const evictedSet = new Set(this.evictedContestants);
+
+            return data
+              // 1. Add isEvicted flag
+              .map((contestant:any) => ({
+                ...contestant,
+                isEvicted: evictedSet.has(contestant.contestantNumber)
+              }))
+              // 3. Prevent search if contestant is evicted
+              .filter((contestant:any) => !contestant.isEvicted || !search)
+              // 2. Order: non-evicted first, evicted last
+              .sort((a:any, b:any) => Number(a.isEvicted) - Number(b.isEvicted));
           }),
           catchError(err => {
             this.notifyService.showError('Could not load contestants. Please try again.');
@@ -70,8 +128,9 @@ export class VotingComponent implements OnInit {
           })
         )
       ),
-      tap(() => this.searchLoading = false)
+      tap(() => (this.searchLoading = false))
     );
+
 
     // trigger initial load (empty search)
     this.searchTerm$.next('');
