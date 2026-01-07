@@ -142,6 +142,7 @@ export class VotingComponent implements OnInit {
     this.activeVote = null;
     this.voteCount = 0;
     this.totalAmount = 0;
+    this.isLoading = false;
   }
 
   /** Build payment metadata */
