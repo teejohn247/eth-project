@@ -19,28 +19,28 @@ export class TicketsSaleComponent implements OnInit {
     {
       id: 1,
       name: 'Regular',
-      price: 5000,
+      price: 10000,
       tier: 'bronze',
       quantity: 0
     },
     {
       id: 2,
-      name: 'VIP',
-      price: 15000,
+      name: 'VIP for Couple',
+      price: 50000,
       tier: 'gold',
       quantity: 0
     },
     {
       id: 3,
-      name: 'Table of 5',
-      price: 1000000,
+      name: 'Gold Table',
+      price: 500000,
       tier: 'silver',
       quantity: 0
     },
     {
       id: 4,
-      name: 'Table of 10',
-      price: 1500000,
+      name: 'Sponsors Table',
+      price: 1000000,
       tier: 'platinum',
       quantity: 0
     }
