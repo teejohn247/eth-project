@@ -42,11 +42,11 @@
             </div>
         </section>
 
-        <section *ngIf="(envProd && (today < cutoffDate))" class="d-flex justify-content-center mt-lg-5 mt-3">
-            <h1 class="main-notice">Online Voting resumes shortly</h1>
+        <section *ngIf="(envProd && (today > cutoffDate))" class="d-flex justify-content-center mt-lg-5 mt-3">
+            <h1 class="main-notice">Voting has ended</h1>
         </section>
 
-        <section *ngIf="envProd && (today > cutoffDate) || !envProd" class="vote-wrap pad-x my-lg-5 my-4">
+        <section *ngIf="envProd && (today < cutoffDate) || !envProd" class="vote-wrap pad-x my-lg-5 my-4">
 
             <div class="search-wrap mt-lg-4 mt-3">
                 <span class="icon"><i class="bi bi-search"></i></span>
